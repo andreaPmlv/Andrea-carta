@@ -1,3 +1,4 @@
+/* 1. Estilos Generales y Fondo */
 body {
     background: linear-gradient(135deg, #dfcad1, #660033);
     display: flex;
@@ -5,21 +6,26 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    font-family: sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    overflow: hidden; /* Evita scrolls raros */
 }
+
+/* 2. La Tarjeta Principal */
 .card {
     background: rgba(255, 255, 255, 0.3); 
     backdrop-filter: blur(10px); 
     padding: 40px;
+    padding-bottom: 60px; 
     border-radius: 50px; 
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-    text-align: center; /
+    text-align: center;
+    animation: aparecer 1.5s ease-out;
+    max-width: 400px;
 }
 
 .dedicatoria {
     color: #070707;
     font-weight: bold;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     margin-bottom: 5px;
 }
 
@@ -30,16 +36,25 @@ body {
     line-height: 1.2;
 }
 
+/* 3. Foto del Árbol/Nosotros en Inicio */
 .tree-container img {
-    width: 250px; /* Foto más grande */
+    width: 250px; 
     height: 180px;
-    object-fit: cover; /* Evita que la foto se estire feo */
-    border-radius: 25px;
+    object-fit: cover; 
+    border-radius: 15px;
     border: 5px solid white;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     margin: 20px 0;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    cursor: pointer;
 }
 
+.tree-container img:hover {
+    transform: scale(1.1) rotate(2deg); 
+    box-shadow: 0 0 20px rgba(255, 77, 109, 0.6);
+}
+
+/* 4. Contador */
 .timer {
     margin-top: 25px;
     padding-top: 10px;
@@ -53,19 +68,86 @@ body {
     font-size: 0.9rem;
     color: #000;
 }
-.tree-container img {
-    /* ... tus otros estilos ... */
-    border-radius: 20px;
-    border: 3px solid white; /* Le da un toque de "foto impresa" */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-} 
 
-@keyframes latido {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+/* 5. El Sobre y la Carta */
+.sobre-contenedor {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin-bottom: 25px; 
 }
 
+.sobre {
+    position: relative;
+    width: 200px;
+    height: 120px;
+    background-color: #ffb3c1;
+    border-radius: 0 0 10px 10px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    z-index: 2;
+}
+
+.tapa {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-top: 70px solid #ff8fa3;
+    z-index: 3;
+    transition: transform 0.4s ease;
+    transform-origin: top;
+}
+
+.carta {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    width: 180px;
+    height: 100px;
+    background: #ffc2d1;
+    z-index: 1; 
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 11px;
+    font-weight: bold;
+    color: #660033;
+    transition: transform 0.4s ease;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.sobre.abierto .tapa {
+    transform: rotateX(180deg);
+    z-index: 0;
+}
+
+.sobre.abierto .carta {
+    transform: translateY(-90px);
+    z-index: 5;
+}
+
+/* 6. Botones (Jugar y Volver) */
+.btn-sutil, .btn-volver {
+    background: #ff4d6d;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.btn-sutil:hover, .btn-volver:hover {
+    background: #660033;
+    transform: scale(1.1);
+}
+
+/* 7. Lluvia de Corazones de fondo */
 #lluvia-corazones {
     position: fixed;
     top: 0;
@@ -74,110 +156,72 @@ body {
     height: 100%;
     pointer-events: none;
     z-index: -1; 
-    overflow: hidden;
 }
 
 .corazon-caido {
     position: absolute;
     color: #ff4d6d;
     font-size: 20px;
-    user-select: none;
     animation: caer linear forwards; 
 }
 
+/* 8. Estilos para el Mensaje de Consuelo (Juego Final) */
+.mensaje-consuelo {
+    margin: 15px 0;
+    padding: 10px;
+    text-align: center;
+}
+
+.foto-final {
+    width: 180px; 
+    height: 180px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 4px solid white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    margin-bottom: 15px;
+}
+
+/* 9. Animaciones */
+@keyframes aparecer {
+    from { opacity: 0; transform: translateY(30px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
 
 @keyframes caer {
-    0% {
-        transform: translateY(-10vh) rotate(0deg);
-        opacity: 1;
-    }
-    100% {
-        transform: translateY(110vh) rotate(360deg); 
-        opacity: 0; 
-    }
-}
-.card {
-    animation: aparecer 1.5s ease-out;
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
 }
 
-@keyframes aparecer {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-.tree-container img {
-    transition: transform 0.5s ease, box-shadow 0.5s ease;
-    cursor: pointer;
-    border-radius: 15px; 
-}
-
-.tree-container img:hover {
-    transform: scale(1.1) rotate(2deg); 
-    box-shadow: 0 0 20px rgba(255, 77, 109, 0.6);
-}
-.sobre-contenedor {
+#interfaz {
     display: flex;
-    justify-content: center;
-    margin-top: 30px;
-}
-
-
-
-.sobre {
-    position: relative;
-    width: 200px;
-    height: 120px;
-    background-color: #ffb3c1; /* Color del sobre */
-    border-radius: 0 0 10px 10px;
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-.sobre:hover {
-    transform: translateY(-10px);
-}
-
-/* La tapa del sobre */
-.tapa {
-    position: absolute;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;/
+    position: fixed; /* Para que siempre esté arriba */
     top: 0;
     left: 0;
-    border-left: 100px solid transparent;
-    border-right: 100px solid transparent;
-    border-top: 70px solid #ff8fa3; /* Color de la tapa */
-    z-index: 3;
-    transition: transform 0.4s ease;
-    transform-origin: top;
+    padding: 15px 0;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    border-bottom: 2px solid #ff4d6d;
+}
+.btn-volver {
+    background-color: #ff4d6d;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+    transition: transform 0.2s, background 0.2s;
 }
 
-.sobre:hover .tapa {
-    transform: rotateX(180deg); /* Abre la tapa */
-}
-
-/* La carta que sale de adentro */
-.carta {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    width: 180px;
-    height: 100px;
-    background: white;
-    z-index: 2;
-    padding: 10px;
-    box-sizing: border-box;
-    font-size: 10px;
-    color: #333;
-    transition: transform 0.4s ease;
-    border-radius: 5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.sobre:hover .carta {
-    transform: translateY(-80px); /* Hace que la carta suba */
-    z-index: 4; /* Para que quede por encima de la tapa abierta */
+.btn-volver:hover {
+    background-color: #660033;
+    transform: scale(1.1);
 }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Atrapa mi Amor ❤️</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { 
+            background: linear-gradient(135deg, #dfcad1, #ffb3c1); 
+            text-align: center; 
+            font-family: 'Segoe UI', sans-serif; 
+            overflow: hidden; 
+            margin: 0;
+            height: 100vh;
+            cursor: pointer; /* Indica que hay que hacer clic para empezar */
+        }
+
+        #interfaz {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            padding: 15px 0;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 2px solid #ff4d6d;
+        }
+
+        .corazon-juego { 
+            position: absolute; 
+            cursor: pointer; 
+            font-size: 45px; 
+            user-select: none;
+            transition: transform 0.1s;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1));
+            z-index: 5;
+        }
+
+        #pantalla-final {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            z-index: 1000;
+            width: 320px;
+        }
+
+        .foto-final {
+            width: 200px;
+            border-radius: 15px;
+            margin: 15px 0;
+            border: 3px solid #ff4d6d;
+        }
+
+        .btn-volver-juego {
+            background: #ff4d6d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="interfaz">
+        <div id="puntos">❤️: 0</div>
+        <div id="tiempo">⏱️: 10s</div>
+        <div id="nivel">Nivel: 1</div>
+    </div>
+
+    <div id="pantalla-final">
+        <h1>¡Tiempo fuera! ⌛</h1>
+        <p id="mensaje-puntos"></p>
+        <div class="mensaje-consuelo">
+            <img src="imagenes.jepg/5490e881-fd3a-4d6e-a6cd-8abe367b15a9.jpeg" alt="Nosotros" class="foto-final">
+            <p>"No te preocupes amor, para mí eres el mejor del mundo. ¡Te amo!" ❤️</p>
+        </div>
+        <button class="btn-volver-juego" onclick="window.location.href='index.html'">🏠 Volver a la Carta</button>
+    </div>
+
+    <audio id="musica-juego" loop>
+        <source src="musica.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let puntos = 0;
+        let nivel = 1;
+        let tiempo =10;
+        let juegoActivo = true;
+        let timerStarted = false;
+        let timer;
+        const audio = document.getElementById('musica-juego');
+
+        // Sincronizar música
+        const t = localStorage.getItem('tiempoMusica');
+        if (t) audio.currentTime = parseFloat(t);
+
+        function actualizarInterfaz() {
+            document.getElementById('puntos').innerText = '❤️: ' + puntos;
+            document.getElementById('tiempo').innerText = '⏱️: ' + tiempo + 's';
+            document.getElementById('nivel').innerText = 'Nivel: ' + nivel;
+        }
+
+        function crearCorazon() {
+            if (!juegoActivo) return;
+            const c = document.createElement('div');
+            c.innerHTML = nivel >= 3 ? '💖' : '❤️';
+            c.className = 'corazon-juego';
+            c.style.left = Math.random() * 85 + 'vw';
+            c.style.top = (Math.random() * 70 + 15) + 'vh';
+            
+            c.onclick = (e) => {
+                e.stopPropagation();
+                puntos++;
+                if (puntos % 5 === 0) nivel++;
+                actualizarInterfaz();
+                c.remove();
+            };
+            document.body.appendChild(c);
+            setTimeout(() => { if(c.parentNode) c.remove(); }, 1500);
+        }
+
+        function terminarJuego() {
+            juegoActivo = false;
+            clearInterval(timer);
+            document.getElementById('pantalla-final').style.display = 'block';
+            document.getElementById('mensaje-puntos').innerText = 'Atrapaste ' + puntos + ' corazones.';
+        }
+
+        // EL JUEGO INICIA AL HACER CLIC EN CUALQUIER LUGAR
+        document.addEventListener('click', () => {
+            if (!timerStarted) {
+                timerStarted = true;
+                audio.play();
+                
+                // Reloj
+                timer = setInterval(() => {
+                    if (tiempo > 0) {
+                        tiempo--;
+                        actualizarInterfaz();
+                    } else {
+                        terminarJuego();
+                    }
+                }, 1000);
+
+                // Generador
+                setInterval(() => {
+                    if (juegoActivo) crearCorazon();
+                }, 800);
+            }
+        });
+    </script>
+</body>
+</html>
